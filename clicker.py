@@ -12,18 +12,17 @@ that_thread = None
 
 def click():
     global running
-    while running:
-        try:
-            location = pyautogui.locateOnScreen('cogtwo.png')
-            location = pyautogui.size()
-            x = int(location.width/2)
-            y = int(location.height/2)
-            #pydirectinput.click(x,y, clicks=5)
-            autoit.mouse_click("left", x, y, 100, 0)
-            print("found")
-        except:
-            print("error")
 
+    location = pyautogui.locateOnScreen('cogtwo.png')
+    location = pyautogui.size()
+    x = int(location.width/2)
+    y = int(location.height/2)
+    #pydirectinput.click(x,y, clicks=5)
+
+    while running:
+        autoit.mouse_click("left", x, y, 1, 0)
+        print("found")
+        time.sleep(0.0001)
 
 def check_thread():
     global running
