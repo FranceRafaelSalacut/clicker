@@ -15,7 +15,7 @@ def click_cookie():
 
     while running:
         try:
-            location = list(pyautogui.locateAllOnScreen('chip.png', confidence=0.8))
+            location = list(pyautogui.locateAllOnScreen('images/chip.png', confidence=0.8))
             #Point(x=756, y=194)
             #Point(x=1155, y=726)
             autoit.mouse_down()
