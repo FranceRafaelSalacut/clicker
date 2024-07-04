@@ -6,6 +6,7 @@ import os
 import pyautogui
 import autoit
 
+ic.disable()
 run = False
 
 def run_thread(bool):
@@ -53,6 +54,15 @@ def auto_play():
             pass
 
         try:
+            coin_three = list(pyautogui.locateAllOnScreen('images/coin_three.png', confidence=0.8))
+            ic(len(coin_three))
+        except Exception as e:
+            ic()
+            ic(e)
+            coin_three = None
+            pass
+
+        try:
             close = list(pyautogui.locateAllOnScreen('images/close.png', confidence=0.8))
             ic(len(close))
         except Exception as e:
@@ -69,32 +79,61 @@ def auto_play():
             ic(e)
             box = None
             pass
-        
-        if box:
+
+        try:
+            afly = list(pyautogui.locateAllOnScreen('images/flyy.png', confidence=0.8))
+            ic(len(afly))
+        except Exception as e:
             ic()
-            x = box[0]
-            autoit.mouse_move(x.left+15, x.top+15)
-            for x in range(0,20):
-                autoit.mouse_click()
+            ic(e)
+            afly = None
+            pass
+
+        try:
+            afly = list(pyautogui.locateAllOnScreen('images/open.png', confidence=0.8))
+            ic(len(afly))
+        except Exception as e:
+            ic()
+            ic(e)
+            afly = None
+            pass
+        
+        if afly:
+            ic()
+            x = afly[0]
+            autoit.mouse_move(x.left+15, x.top+15, speed=0)
+            autoit.mouse_click()
+        elif coin_three:
+            ic()
+            x = coin_three[0]
+            autoit.mouse_move(x.left+15, x.top+15, speed=0)
+            autoit.mouse_click()
         elif coin_two:
             ic()
             x = coin_two[0]
-            autoit.mouse_move(x.left+15, x.top+15)
-            autoit.mouse_click()
+            autoit.mouse_move(x.left+15, x.top+15, speed=0)
+            for x in range(0,35):
+                autoit.mouse_click()
         elif coin_one:
             ic()
             x = coin_one[0]
-            autoit.mouse_move(x.left+15, x.top+15)
+            autoit.mouse_move(x.left+15, x.top+15, speed=0)
+            autoit.mouse_click()
+        elif box:
+            ic()
+            x = box[0]
+            autoit.mouse_move(x.left+22, x.top+22, speed=0)
             autoit.mouse_click()
         elif upgrade:
             ic()
             x = upgrade[0]
-            autoit.mouse_move(x.left+15, x.top+15)
+            autoit.mouse_move(x.left+15, x.top+15, speed=0)
             autoit.mouse_click()
+            time.sleep(0.1)
         elif close:
             ic()
             x = close[0]
-            autoit.mouse_move(x.left+15, x.top+15)
+            autoit.mouse_move(x.left+15, x.top+15, speed=0)
             autoit.mouse_click()
 
 def on_press(key):
