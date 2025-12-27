@@ -8,10 +8,10 @@ from stable_baselines3.common.evaluation import evaluate_policy
 gym.register_envs(ale_py)
 
 log_path = os.path.join("runs", "train")
-ppo_path = os.path.join(log_path, "ppo_breakout_CNN")
+ppo_path = os.path.join(log_path, "ppo_cartpole_out")
 
 
-env = gym.make("Cartpole-v1")
+env = gym.make("CartPole-v1")
 env = DummyVecEnv([lambda: env])
 model = PPO('MlpPolicy',env,verbose=0, tensorboard_log=log_path)
 
