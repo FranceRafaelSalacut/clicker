@@ -1,6 +1,7 @@
 import gymnasium as gym
 import ale_py
 import os
+import warnings
 from stable_baselines3 import PPO
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
@@ -8,7 +9,7 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnRewardThreshold, StopTrainingOnNoModelImprovement
 
 gym.register_envs(ale_py)
-
+#warnings.filterwarnings("ignore")
 
 def MAKE_MODEL_PATH(log_path, model_name, count=0):
     temp = os.path.join(log_path, model_name+"_"+str(count))
@@ -28,7 +29,7 @@ def FIND_LATEST_MODEL(log_path, model_name, count=0):
         return FIND_LATEST_MODEL(log_path, model_name, count)
     else:
         count-=1
-        latest = os.path.join(log_path, model_name+"_"+str(count), "latest_model")
+        latest = os.path.join(log_path, model_name+"_"+str(count), "best_model")
         return latest
 
 def RL_TRAIN(game, policy, log_path, model_name, reward_threshold=200):
@@ -39,14 +40,14 @@ def RL_TRAIN(game, policy, log_path, model_name, reward_threshold=200):
     final_save = os.path.join(callback_save, "latest_model")
 
     #stop_callback = StopTrainingOnRewardThreshold(reward_threshold=reward_threshold, verbose= 1)
-    stop_callback = StopTrainingOnNoModelImprovement(max_no_improvement_evals=10, min_evals=10, verbose=1)
+    stop_callback = StopTrainingOnNoModelImprovement(max_no_improvement_evals=5, min_evals=0, verbose=1)
     eval_callback = EvalCallback(env, 
                                  callback_on_new_best=stop_callback,
-                                 eval_freq=10000,
+                                 eval_freq=100000,
                                  best_model_save_path=callback_save,
                                  verbose=1)
 
-    model.learn(total_timesteps=200000)#, callback=eval_callback)
+    model.learn(total_timesteps=10**6, callback=eval_callback)
     model.save(final_save)
     env.close()
 
@@ -100,15 +101,15 @@ def RL_MODEL_TEST(game, episodes, model_path):
     env.close()
 
 def main():
-    game = "CartPole-v1"#"ALE/Breakout-v5"
-    policy = "MlpPolicy"
-    model_name = "ppo_cartpole_mlppolicy"
+    game = "ALE/Breakout-v5"#"CartPole-v1"#"ALE/Breakout-v5"
+    policy = "CnnPolicy"
+    model_name = "ppo_breakout_cnnpolicy"
     log_path = os.path.join("runs", "train")
     
 
     #RL_TRAIN(game, policy, log_path, model_name)
     #RL_EVAL(game, model_save_path)
     #RL_RANDOM_PLAY(game, 5)
-    RL_MODEL_TEST(game, 5, FIND_LATEST_MODEL(log_path, model_name))#oos.path.join(log_path, "ppo_cartwheel_mlp_0"))
+    #RL_MODEL_TEST(game, 5, FIND_LATEST_MODEL(log_path, model_name))#os.path.join(log_path, "ppo_cartwheel_mlp_0"))
 
 main()
